@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+  <meta name="theme-color" content="#1b2525">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="廢地重建">
+  <link rel="manifest" href="app.webmanifest">
+  <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="assets/icon-192.png">
+  <title>廢地重建：餘生復甦｜Safari 可玩版</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <main id="gameShell" aria-label="廢地重建：餘生復甦">
+    <canvas id="gameCanvas" aria-label="第一人稱遊戲場景"></canvas>
+
+    <section class="hud hud-top" aria-live="polite">
+      <div class="brand"><button class="settings-button" id="settingsButton" aria-label="開啟設定">⚙</button><div><strong>廢地重建</strong><small>餘生復甦 · Safari 版</small></div></div>
+      <div class="status-pills"><span id="weatherPill">晴天</span><span id="timePill">第 1 天 · 08:00</span><span id="revivalPill">復甦 0%</span></div>
+    </section>
+
+    <section class="hud hud-bottom" aria-live="polite">
+      <div class="inventory-card"><span class="eyebrow">回收材料</span><div id="inventoryText">鋼材 0 · 木板 0 · 玻璃 0 · 螺絲 0 · 石塊 0</div></div>
+    </section>
+    <div class="hint-card" id="hintCard"><button id="hintToggle" aria-label="展開或收起提示">提示詞⌃</button><span id="messageText">這裡可以慢慢整理。滑動右側看風景。</span></div>
+
+    <div class="crosshair" aria-hidden="true">＋</div>
+    <div class="interaction-prompt" id="interactionPrompt"></div>
+
+    <div class="touch-zone touch-look" id="lookPad" aria-label="滑動轉動視角"></div>
+    <div class="joystick" id="joystick" aria-label="虛擬移動搖桿"><div class="joystick-ring"></div><div class="joystick-knob" id="joystickKnob"></div></div>
+
+    <div class="action-cluster" aria-label="遊戲操作">
+      <button class="action-button" id="interactButton">拆解</button>
+      <button class="action-button" id="buildButton">建造</button>
+      <button class="action-button" id="crouchButton">蹲下</button>
+      <button class="action-button" id="weatherButton">跳躍</button>
+    </div>
+
+    <div class="weather-menu panel hidden" id="weatherMenu">
+      <div class="panel-head"><div><span class="eyebrow">氛圍</span><h2>選擇天氣</h2></div><button class="close-button" id="closeWeather">×</button></div>
+      <div class="weather-options"><button data-weather="sunny">晴天<span>明亮日照</span></button><button data-weather="cloudy">陰天<span>柔和光線</span></button><button data-weather="rain">小雨<span>濕潤與雨聲</span></button></div>
+    </div>
+
+    <div class="build-menu panel hidden" id="buildMenu">
+      <div class="panel-head"><div><span class="eyebrow">自由建造</span><h2>選擇要放置的物件</h2></div><button class="close-button" id="closeBuild">×</button></div>
+      <div class="build-options" id="buildOptions"></div>
+      <div class="build-footer"><span id="buildHint">選擇物件後，按下放置。</span><button class="primary-button" id="placeButton">放置</button></div>
+    </div>
+    <div class="placement-controls hidden" id="placementControls"><button class="secondary-button" id="cancelPlace">取消</button><button class="primary-button" id="confirmPlace">放置</button></div>
+    <div class="placement-adjust hidden" id="placementAdjust">
+      <label><span>遠近 <output id="distanceValue">4.0 m</output></span><input id="placementDistance" type="range" min="2" max="8" step="0.25" value="4"></label>
+      <label><span>方向 <output id="rotationValue">0°</output></span><input id="placementRotation" type="range" min="0" max="345" step="15" value="0"></label>
+      <div class="rotate-buttons"><button id="rotateLeft" aria-label="逆時針旋轉">↶</button><button id="rotateRight" aria-label="順時針旋轉">↷</button></div>
+    </div>
+
+    <div class="settings-menu panel hidden" id="settingsMenu">
+      <div class="panel-head"><div><span class="eyebrow">遊戲設定</span><h2>調整你的散步方式</h2></div><button class="close-button" id="closeSettings">×</button></div>
+      <label class="setting-row"><span>視角靈敏度</span><input id="lookSensitivity" type="range" min="0.4" max="2" step="0.1" value="1"></label>
+      <label class="setting-row"><span>鏡頭移動感</span><input id="cameraMotion" type="checkbox" checked></label>
+      <label class="setting-row"><span>顯示提示詞</span><input id="showHints" type="checkbox" checked></label>
+      <div class="settings-actions"><button class="primary-button" id="saveProgress">儲存進度</button><button class="secondary-button" id="resetSave">重新開始</button><button class="secondary-button" id="exitGame">退出遊戲</button></div>
+      <p class="settings-note">設定與進度只保存在這台 iPhone 的 Safari。</p>
+    </div>
+
+    <div class="start-screen" id="startScreen"><div class="start-card"><div class="start-symbol">✦</div><p class="eyebrow">一座小鎮，等你慢慢整理</p><h1>廢地重建<br><em>餘生復甦</em></h1><p>沒有怪物、沒有危險、沒有倒數。用自己的節奏，讓荒地重新長出綠意。</p><button class="primary-button start-button" id="startButton">開始散步</button><small>建議以 iPhone Safari 橫向或直向全螢幕遊玩</small></div></div>
+  </main>
+  <script>if ('serviceWorker' in navigator) navigator.serviceWorker.register('./sw.js').catch(()=>{});</script>
+  <script type="module" src="three_game.js"></script>
+</body>
+</html>

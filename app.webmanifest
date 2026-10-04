@@ -1,0 +1,16 @@
+{
+  "name": "廢地重建：餘生復甦",
+  "short_name": "廢地重建",
+  "description": "沒有戰鬥與壓力，慢慢讓荒島恢復生機。",
+  "lang": "zh-Hant",
+  "start_url": "./?source=homescreen",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "theme_color": "#1b2525",
+  "background_color": "#172020",
+  "icons": [
+    {"src":"assets/icon-192.png","sizes":"192x192","type":"image/png","purpose":"any maskable"},
+    {"src":"assets/icon-512.png","sizes":"512x512","type":"image/png","purpose":"any maskable"}
+  ]
+}
